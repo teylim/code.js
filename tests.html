@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>tests</title>
+</head>
+
+<body>
+  </script>
+  <script src = "code.js"></script>
+  <script>
+  var tests;
+  // Each array comprises "test", "result" and "expectation", the last one is empty for comma convenience
+  tests = function () {
+    var i;
+    for (i = 0; i < arguments.length - 1; i += 1) {
+      if (arguments[i][1] !== arguments[i][2]) {
+        console.log(arguments[i][0] + " FAILED");
+      }
+    }
+    console.log(arguments.length - 1 + " tests completed.")
+  };
+  tests(
+  ["codewords() size", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).codewords()[3].length, 2],
+  ["codewords() length", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).codewords().length, 4],
+  ["codeword() length", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).codeword(3).length, 2],
+  ["alphabetSize()", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).alphabetSize(), 2],
+  ["clone() size", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).clone().codewords()[3].length, 2],
+  ["clone() length", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).clone().codewords().length, 4],
+  ["clone() alphabet size", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).clone().alphabetSize(), 2],
+  ["length()", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).length(), 2],
+  ["size()", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).size(), 4],
+  ["informationRate()", code([[0, 0, 0], [0, 1, 1], [1, 0, 1], [1, 1, 0]], 2).informationRate(), 2/3],
+  ["distanceFrom() using hamming distance by default", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).distanceFrom([1, 0, 1, 0, 1], false), 2],
+  ["distanceFrom()", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).distanceFrom([1, 0, 1, 0, 1], false, "hamming"), 2],
+  ["distanceFrom() not ignoring similar", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1], [1, 0, 1, 0, 1]], 2).distanceFrom([1, 0, 1, 0, 1], false, "hamming"), 0],
+  ["distanceFrom() ignoring similar", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1], [1, 0, 1, 0, 1]], 2).distanceFrom([1, 0, 1, 0, 1], true, "hamming"), 2],
+  ["weight() using hamming distance by default", code([[1, 0, 1, 0, 1], [1, 1, 1, 1, 1]], 2).weight([1, 0, 1, 0, 1]), 3],
+  ["weight()", code([[1, 0, 1, 0, 1], [1, 1, 1, 1, 1]], 2).weight([1, 0, 1, 0, 1], "hamming"), 3],
+  ["weight() containing zero codeword", code([[1, 0, 1, 0, 1], [1, 1, 1, 1, 1], [0, 0, 0, 0, 0]], 2).weight([1, 0, 1, 0, 1], "hamming"), 3],
+  ["euclidean inner product is used by default", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 5).maximumInnerProductWith(code([[0, 1, 0, 1, 0], [1, 0, 1, 0, 1]], 5)), 3],
+  ["euclidean inner product", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 5).maximumInnerProductWith(code([[0, 1, 0, 1, 0], [1, 0, 1, 0, 1]], 5), "euclidean"), 3],
+  ["euclidean inner product is used by default for test of orthogonality", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).isOrthogonalTo(code([[0, 1, 0, 1, 0], [1, 0, 1, 0, 1]], 2)), false],
+  ["test of orthogonality fails", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).isOrthogonalTo(code([[0, 1, 0, 1, 0], [1, 0, 1, 0, 1]], 2), "euclidean"), false],
+  ["test of orthogonality passes", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).isOrthogonalTo(code([[0, 0, 0, 0, 0]], 2), "euclidean"), true],
+  ["test of containment fails", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).contains(code([[1, 1, 1]], 2)), false],
+  ["test of containment passes", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).contains(code([[1, 0, 1]], 2)), true],
+  ["test of linearity fails", code([[0, 0, 0], [0, 0, 1], [0, 1, 0]], 2).isLinear(), false],
+  ["test of linearity passes", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).isLinear(), true],
+  ["dimension is undefined for non-linear code", code([[0, 0, 0], [0, 0, 1], [0, 1, 0]], 2).dimension(), undefined],
+  ["dimension of linear code", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).dimension(), 2],
+  ["codewords in fromBasis([[[1], [1], [0], [0], [0]], [[0], [1], [1], [0], [0]], [[0], [0], [1], [1], [0]], [[0], [0], [0], [1], [1]]]) of length 5", code([], 2).fromBasis([[[1], [1], [0], [0], [0]], [[0], [1], [1], [0], [0]], [[0], [0], [1], [1], [0]], [[0], [0], [0], [1], [1]]]).length(), 5],
+  ["hamming distance is used by default", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).distance(), 5],
+  ["hamming distance", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).distance("hamming"), 5],
+  ["relative minimum distance uses hamming distance by default", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).relativeMinimumDistance(), 4/5],
+  ["relative minimum distance", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).relativeMinimumDistance("hamming"), 4/5],
+  ["exactly error detecting uses hamming distance by default", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).exactlyErrorDetecting(), 4],
+  ["exactly error detecting", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).exactlyErrorDetecting(), 4],
+  ["exactly error correcting uses hamming distance by default", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).exactlyErrorCorrecting(), 2],
+  ["exactly error correcting", code([[0, 0, 0, 0, 0], [1, 1, 1, 1, 1]], 2).exactlyErrorCorrecting(), 2],
+  ["exactly error correcting uses floor function", code([[0, 0, 0, 0, 0, 0], [1, 1, 1, 1, 1, 1]], 2).exactlyErrorCorrecting(), 2],
+  ["there are 2 ^ 5 = 32 codewords fromBasis([[[1], [1], [0], [0], [0]], [[0], [1], [1], [0], [0]], [[0], [0], [1], [1], [0]], [[0], [0], [0], [1], [1]]])", code([], 2).fromBasis([[[1], [1], [0], [0], [0]], [[0], [1], [1], [0], [0]], [[0], [0], [1], [1], [0]], [[0], [0], [0], [1], [1]]]).size(), 16],
+  ["codewords in allPossibleCodewords() of length 5", code([], 2).allPossibleCodewords(5).length(), 5],
+  ["there are 2 ^ 5 = 32 codewords in allPossibleCodewords() of length 5 over alphabet of size 2", code([], 2).allPossibleCodewords(5).size(), 32],
+  ["basis() length", code([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]], 2).basis()[0].length, 3],
+  ["basis() size", code([[0, 0, 0], [0, 0, 1], [0, 1, 0], [0, 1, 1], [1, 0, 0], [1, 0, 1], [1, 1, 0], [1, 1, 1]], 2).basis().length, 3],
+  ["there are 2 codewords [[0, 0, 0], [1, 1, 1]] in orthogonalComplement() of [[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]] over alphabet of size 2 using Euclidean inner product as default", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).orthogonalComplement().size(), 2],
+  ["there are 2 codewords [[0, 0, 0], [1, 1, 1]] in orthogonalComplement() of [[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]] over alphabet of size 2", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).orthogonalComplement("euclidean").size(), 2],
+  ["there are 2 codewords [[0, 0, 0], [1, 1, 1]] in dual() of [[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]] over alphabet of size 2 using Euclidean inner product as default", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).dual().size(), 2],
+  ["there are 2 codewords [[0, 0, 0], [1, 1, 1]] in dual() of [[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]] over alphabet of size 2", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).dual("euclidean").size(), 2],
+  ["the dual() of [[0, 0, 0], [0, 1, 1], [1, 1, 0]] over alphabet of size 2 is undefined", code([[0, 0, 0], [0, 1, 1], [1, 1, 0]], 2).dual("euclidean"), undefined],
+  ["isSelfOrthogonal()", code([[0, 0, 0, 0], [1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 1, 1]], 2).isSelfOrthogonal(), true],
+  ["isSelfOrthogonal() using Euclidean inner product as default", code([[0, 0, 0, 0], [1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 1, 1]], 2).isSelfOrthogonal("euclidean"), true],
+  ["isSelfOrthogonal() is undefined for non-linear codes", code([[0, 0, 0, 0], [1, 0, 1, 0], [0, 1, 0, 1]], 2).isSelfOrthogonal("euclidean"), undefined],
+  ["!isSelfOrthogonal()", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).isSelfOrthogonal("euclidean"), false],
+  ["isSelfDual()", code([[0, 0, 0, 0], [1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 1, 1]], 2).isSelfDual(), true],
+  ["isSelfDual() using Euclidean inner product as default", code([[0, 0, 0, 0], [1, 0, 1, 0], [0, 1, 0, 1], [1, 1, 1, 1]], 2).isSelfDual("euclidean"), true],
+  ["isSelfDual() is undefined for non-linear codes", code([[0, 0, 0, 0], [1, 0, 1, 0], [0, 1, 0, 1]], 2).isSelfDual("euclidean"), undefined],
+  ["!isSelfDual()", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).isSelfDual("euclidean"), false],
+  ["!isSelfDual() although isSelfOrthogonal", code([[0, 0, 0, 0, 0], [1, 0, 1, 1, 0], [0, 1, 2, 1, 0], [1, 1, 0, 2, 0], [2, 0, 2, 2, 0], [0, 2, 1, 2, 0], [2, 2, 0, 1, 0], [1, 2, 2, 0, 0], [2, 1, 1, 0, 0]], 3).isSelfDual("euclidean"), false],
+  ["encode() length", code([[0, 1, 0, 1], [1, 0, 1, 0]], 2).encode([[0, 1, 1], [1, 1, 0]]).length(), 3],
+  ["encode() size", code([[0, 1, 0, 1], [1, 0, 1, 0]], 2).encode([[0, 1, 1], [1, 1, 0]]).size(), 2],
+  ["decode() length", code([[0, 0, 0], [1, 1, 0]], 2).decode([[0, 1, 1], [1, 1, 0]]).length(), 2],
+  ["decode() size", code([[0, 0, 0], [1, 1, 0]], 2).decode([[0, 1, 1], [1, 1, 0]]).size(), 2],
+  ["cosets() uses hamming distance by default", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).cosets().length, 4],
+  ["number of cosets() is alphabetSize() ^ (length() - dimension())", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).cosets("hamming").length, 4],
+  ["cosets() is an array of arrays with an array of coset leaders", Array.isArray(code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).cosets("hamming")[3][0][0]), true],
+  ["cosets() is an array of arrays with a code", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).cosets("hamming")[3][1].size(), 4],
+  ["syndromeLookupTable() uses Hamming distance by default", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeLookupTable(true).length, 4],
+  ["syndromeLookupTable() coset leader", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeLookupTable(true, "hamming")[3][0].length, 4],
+  ["syndromeLookupTable() syndrome length", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeLookupTable(true, "hamming")[3][1].length(), 2],
+  ["syndromeLookupTable() syndrome size", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeLookupTable(true, "hamming")[3][1].size(), 1],
+  ["syndromeLookupTable() is undefined for incomplete decoding if there are multiple possible coset leaders", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeLookupTable(false, "hamming"), undefined],
+  ["syndromeLookupTable() for complete decoding can be done even if there are multiple possible coset leaders", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeLookupTable(true, "hamming").length, 4],
+  ["syndromeLookupTable() for incomplete decoding if there is only one possible coset leaders", code([[0, 0], [0, 1]], 2).syndromeLookupTable([1, 1], false, "hamming").length, 2],
+  ["syndromeDecoding() uses Hamming distance by default", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeDecoding([0, 0, 0, 1], true).length, 4],
+  ["syndromeDecoding() is undefined for incomplete decoding if there are multiple possible coset leaders", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeDecoding([0, 0, 0, 1], false, "hamming"), undefined],
+  ["syndromeDecoding() for complete decoding can be done even if there are multiple possible coset leaders", code([[0, 0, 0, 0], [1, 0, 1, 1], [0, 1, 0, 1], [1, 1, 1, 0]], 2).syndromeDecoding([0, 0, 0, 1], true, "hamming").length, 4],
+  ["syndromeDecoding() for incomplete decoding if there is only one possible coset leaders", code([[0, 0], [0, 1]], 2).syndromeDecoding([1, 1], false, "hamming").length, 2],
+  ["lowerBound() uses general bound by default", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).lowerBound(undefined, "hamming"), 1],
+  ["lowerBound() uses hamming distance by default", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).lowerBound("general"), 1],
+  ["general lower bound", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).lowerBound("general", "hamming"), 1],
+  ["sphere covering lower bound", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).lowerBound("sphereCovering", "hamming"), 4],
+  ["singleton lower bound", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).lowerBound("singleton", "hamming"), 128],
+  ["gilbert varshamov lower bound", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).lowerBound("gilbertVarshamov", "hamming"), 6],
+  ["gilbert varshamov lower bound is undefined for non-linear codes", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).lowerBound("gilbertVarshamov", "hamming"), undefined],
+  ["gilbert varshamov lower bound is undefined if distance is smaller than 2)", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]], 2).lowerBound("gilbertVarshamov", "hamming"), undefined],
+  ["gilbert varshamov lower bound is undefined if volume(length() - 1, alphabetSize(), distance(metric) - 1) >= Math.pow(alphabetSize(), length() - dimension())", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).lowerBound("gilbertVarshamov", "hamming"), undefined],
+  ["lower bound('*')", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).lowerBound("*", "hamming"), 128],
+  ["upperBound() uses general bound by default", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound(undefined, "hamming"), 2048],
+  ["upperBound() uses hamming distance by default", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("general"), 2048],
+  ["general upper bound", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("general", "hamming"), 2048],
+  ["hamming upper bound", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("hamming", "hamming"), 30],
+  ["sphere packing upper bound", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("spherePacking", "hamming"), 30],
+  ["plotkin upper bound for binary code of odd length with maximum allowable distance", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("plotkin", "hamming"), 24],
+  ["plotkin upper bound for binary code of even length with maximum allowable distance", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("plotkin", "hamming"), 12],
+  ["plotkin upper bound for binary code of odd length", code([[0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("plotkin", "hamming"), 6],
+  ["plotkin upper bound for binary code of even length", code([[0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("plotkin", "hamming"), 4],
+  ["plotkin upper bound is undefined if distance(metric) <= (1 - 1 / alphabetSize()) * length()", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 3).upperBound("plotkin", "hamming"), undefined],
+  ["plotkin upper bound", code([[0, 0, 0, 0, 0, 0, 0], [0, 0, 1, 1, 1, 1, 1]], 3).upperBound("plotkin", "hamming"), 15],
+  ["griesmer upper bound is undefined for non-linear codes", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("griesmer", "hamming"), undefined],
+  ["griesmer upper bound", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("griesmer", "hamming"), 16],
+  ["upper bound('*')", code([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1]], 2).upperBound("*", "hamming"), 16],
+  ["isOptimal() uses hamming distance by default", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).isOptimal(), true],
+  ["isOptimal()", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).isOptimal("hamming"), true],
+  ["!isOptimal()", code([[0, 0, 0], [0, 1, 1], [1, 1, 0]], 2).isOptimal("hamming"), undefined],
+  ["isPerfect() uses hamming distance by default", code([[]], 2).fromBasis([[1, 0, 0, 0, 1, 1, 0], [0, 1, 0, 0, 1, 0, 1], [0, 0, 1, 0, 0, 1, 1], [0, 0, 0, 1, 1, 1, 1]]).isPerfect(), true],
+  ["isPerfect()", code([[]], 2).fromBasis([[1, 0, 0, 0, 1, 1, 0], [0, 1, 0, 0, 1, 0, 1], [0, 0, 1, 0, 0, 1, 1], [0, 0, 0, 1, 1, 1, 1]]).isPerfect("hamming"), true],
+  ["!isPerfect()", code([[]], 2).fromBasis([[1, 0, 0, 0, 1, 1, 0], [0, 1, 0, 0, 1, 0, 1], [0, 0, 1, 0, 0, 1, 1]]).isPerfect("hamming"), undefined],
+  ["isMaximumDistanceSeparable() uses hamming distance by default", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).isMaximumDistanceSeparable(), true],
+  ["isMaximumDistanceSeparable()", code([[0, 0, 0], [0, 1, 1], [1, 1, 0], [1, 0, 1]], 2).isMaximumDistanceSeparable("hamming"), true],
+  ["!isMaximumDistanceSeparable()", code([[0, 0, 0], [0, 1, 1], [1, 1, 0]], 2).isMaximumDistanceSeparable("hamming"), undefined],
+
+  []);
+  </script>
+</body>
+
+</html>
