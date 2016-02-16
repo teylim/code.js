@@ -1,17 +1,16 @@
 var code;
 
 /**
- * @param {Array} inputCodewords the codewords.
- * @param {Number} inputAlphabetSize the size of the alphabet.
+ * @param {Array} inputCodewords the codewords represented by arrays of equal length. Each codeword must be an array of integers between *0* and *`inputAlphabetSize` - 1*, both inclusive.
+ * @param {Number} inputAlphabetSize the prime size of the alphabet.
  * @returns {code} the code.
  */
-
 code = function (inputCodewords, inputAlphabetSize) {
 
 // Return object with key "error" if errors thrown
 try{
 
-  var range, zero, standardBasis, add, multiply, hammingDistance, euclideanInnerProduct, volume, generalLowerBound, sphereCoveringLowerBound, singletonLowerBound, generalUpperBound, hammingUpperBound, plotkinUpperBound, gilbertVarshamovLowerBound, griesmerUpperBound, inputCodewords, inputAlphabetSize, codewords, codeword, alphabetSize, clone, length, size, informationRate, distanceFrom, weight, maximumInnerProductWith, isOrthogonalTo, contains, isLinear, dimension, distance, relativeMinimumDistance, exactlyErrorDetecting, exactlyErrorCorrecting, fromBasis, allPossibleCodewords, basis, orthogonalComplement, dual, isSelfOrthogonal, isSelfDual, encode, decode, cosets, syndromeLookupTable, syndromeDecoding, lowerBound, upperBound, isOptimal, isPerfect, isMaximumDistanceSeparable;
+  var range, zero, standardBasis, add, multiply, hammingDistance, euclideanInnerProduct, volume, generalLowerBound, sphereCoveringLowerBound, singletonLowerBound, generalUpperBound, hammingUpperBound, plotkinUpperBound, gilbertVarshamovLowerBound, griesmerUpperBound, inputCodewords, inputAlphabetSize, i, j, codewords, codeword, alphabetSize, clone, length, size, informationRate, distanceFrom, weight, maximumInnerProductWith, isOrthogonalTo, contains, isLinear, dimension, distance, relativeMinimumDistance, exactlyErrorDetecting, exactlyErrorCorrecting, fromBasis, allPossibleCodewords, basis, orthogonalComplement, dual, isSelfOrthogonal, isSelfDual, encode, decode, cosets, syndromeLookupTable, syndromeDecoding, lowerBound, upperBound, isOptimal, isPerfect, isMaximumDistanceSeparable;
 
   //// PRIVATE FUNCTIONS
 
@@ -156,7 +155,44 @@ try{
   //// MODIFY THE INPUT ARGUMENTS ////
 
   if (!Array.isArray(inputCodewords)) {
-    inputCodewords = [];
+    inputCodewords = [[]];
+  }
+  for (i = 0; i < inputCodewords.length; i += 1) {
+    // Scalar codeword is treated as codeword of length 1
+    if (typeof inputCodewords[i] === "number") {
+      inputCodewords[i] = [inputCodewords[i]];
+    }
+    // Default codeword is empty
+    if (!Array.isArray(inputCodewords[i])) {
+      inputCodewords[i] = [];
+    }
+    // All codeword must be of the same length
+    if (inputCodewords[i].length !== inputCodewords[0].length) {
+      throw "Lengths of codewords differ";
+    }
+  }
+
+  // Default size of alphabet is 2
+  if (inputAlphabetSize !== parseInt(inputAlphabetSize, 10) || inputAlphabetSize <= 1 || !isFinite(inputAlphabetSize) || typeof inputAlphabetSize !== "number") {
+    inputAlphabetSize = 2;
+  }
+  // Size of alphabet must be prime
+  for (i = 2; i <= Math.sqrt(inputAlphabetSize); i += 1) {
+    if (inputAlphabetSize % i === 0 && i !== inputAlphabetSize) {
+      throw "Size of alphabet is not prime";
+    }
+  }
+
+  for (i = 0; i < inputCodewords.length; i += 1) {
+    // Codewords must be array of integers between 0 and alphabetSize() - 1, both inclusive
+    for (j = 0; j < inputCodewords[i].length; j += 1) {
+      if (inputCodewords[i][j] !== parseInt(inputCodewords[i][j], 10)){
+        throw "Some symbols are not integers";
+      }
+      if (inputCodewords[i][j] < 0 || inputCodewords[i][j] > inputAlphabetSize - 1) {
+        throw "Some symbols are not in the alphabet";
+      }
+    }
   }
 
   //// NO MORE CHANGES ARE TO BE MADE TO inputCodeword FROM HERE ON ////

@@ -23,7 +23,17 @@
   tests(
   ["codewords() size", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).codewords()[3].length, 2],
   ["codewords() length", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).codewords().length, 4],
+  ["default number codeword() length is 1", code([1, [1]], 2).codeword(0).length, 1],
+  ["default codeword() is empty", code(["a", []], 2).codeword(0).length, 0],
+  ["Lengths of codewords differ", code([[0], [0, 1]], 2).error, "Lengths of codewords differ"],
   ["codeword() length", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).codeword(3).length, 2],
+  ["Some symbols are not integers", code([[0.5]], 2).error, "Some symbols are not integers"],
+  ["Some symbols are not in the alphabet", code([[3]], 2).error, "Some symbols are not in the alphabet"],
+  ["default non-integer alphabetSize() is 2", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2.5).alphabetSize(), 2],
+  ["default alphabetSize() smaller than 2 is 2", code([[0, 0], [0, 1], [1, 0], [1, 1]], 1).alphabetSize(), 2],
+  ["default infinite alphabetSize() is 2", code([[0, 0], [0, 1], [1, 0], [1, 1]], Infinity).alphabetSize(), 2],
+  ["default string alphabetSize() is 2", code([[0, 0], [0, 1], [1, 0], [1, 1]], "1").alphabetSize(), 2],
+  ["alphabetSize() is composite", code([[0, 0], [0, 1], [1, 0], [1, 1]], 4).error, "Size of alphabet is not prime"],
   ["alphabetSize()", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).alphabetSize(), 2],
   ["clone() size", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).clone().codewords()[3].length, 2],
   ["clone() length", code([[0, 0], [0, 1], [1, 0], [1, 1]], 2).clone().codewords().length, 4],
@@ -132,6 +142,15 @@
   ["!isMaximumDistanceSeparable()", code([[0, 0, 0], [0, 1, 1], [1, 1, 0]], 2).isMaximumDistanceSeparable("hamming"), undefined],
 
   []);
+  </script>
+  <script src = "../polynomial.js/polynomial.js"></script>
+  <script>
+  var codePolynomialsOfDifferentDegrees, codeCyclic;
+  codeCyclic = code([[]],2).fromBasis(polynomial([0], "x", 2).cyclicCodeBasis(7, 3));
+  codePolynomialsOfDifferentDegrees = code([polynomial([1, 1], "x", 2).array(3), polynomial([0, 1, 1], "x", 2).array()], 2);
+  if (codePolynomialsOfDifferentDegrees.length() === 3 && codePolynomialsOfDifferentDegrees.size() === 2 && codeCyclic.length() === 7 && codeCyclic.size() === 8 && codeCyclic.dimension() === 3) {
+    console.log("Works with polynomial.js");
+  }
   </script>
 </body>
 

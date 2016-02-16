@@ -10,9 +10,9 @@
 
 **Parameters**
 
-**inputCodewords**: `Array`, the codewords.
+**inputCodewords**: `Array`, the codewords represented by arrays of equal length. Each codeword must be an array of integers between *0* and *`inputAlphabetSize` - 1*, both inclusive.
 
-**inputAlphabetSize**: `Number`, the size of the alphabet.
+**inputAlphabetSize**: `Number`, the prime size of the alphabet.
 
 **Returns**: `code`, the code.
 
