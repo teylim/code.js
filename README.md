@@ -1,5 +1,5 @@
 # polynomial.js
-***a JavaScript library for working with codes***
+***a JavaScript library for working with codes (coding theory)***
 
 License is omitted for the time being, until someone finds the files useful.
 
